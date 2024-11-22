@@ -3,8 +3,6 @@ function setup() {
 }
 const gridLength = 60;
 const gridSize = 30;
-let characterY = 10;
-let characterX = 15;
 let speed = 0;
 let jump = 0;
 let ground = 16;
@@ -114,6 +112,55 @@ class Topshop {
 }
 let kicksShop = new Topshop(9, 4, 10, 18);
 
+class Character {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    fill(255, 0, 0);
+
+    rect(
+      this.x * gridSize + gridSize,
+      this.y * gridSize + gridSize,
+      gridSize * 2
+    );
+  }
+}
+let player = new Character(15, 16, 2, 2);
+
+function startScreen() {
+  background(166, 211, 216);
+  drawGrid();
+  //topshop
+  kicksShop.draw();
+
+  //middle shops
+  zaraShop.draw();
+  cerveraShop.draw();
+  apotekShop.draw();
+  hemtexShop.draw();
+
+  //roofs shops
+  lagerhausRoof.draw();
+  ahlensRoof.draw();
+  lykoRoof.draw();
+  hmRoof.draw();
+  zaraRoof.draw();
+  hemtexRoof.draw();
+  cerveraRoof.draw();
+  apotekRoof.draw();
+  kicksRoof.draw();
+
+  //front shops
+  lagerhausShop.draw();
+  lykoShop.draw();
+  hmShop.draw();
+  ahlensShop.draw();
+}
+
 function gameScreen() {
   background(166, 211, 216);
   drawGrid();
@@ -142,54 +189,45 @@ function gameScreen() {
   lykoShop.draw();
   hmShop.draw();
   ahlensShop.draw();
-  drawCharacter();
-  characterX = characterX + speed;
+
+  //player
+  player.draw();
+
+  //player speed
+  player.x = player.x + speed;
+  //constains on the x-axis
+  player.x = constrain(player.x, -1, width / gridSize + 1.5);
 
   if (keyIsDown(39)) {
-    speed = 0.3;
+    speed = 0.5;
   } else if (keyIsDown(37)) {
-    speed = -0.3;
+    speed = -0.5;
   } else {
     speed = 0;
   }
+  //player jump
+  player.y = player.y + jump;
+  //constrains on the y-axis
+  // player.y=constrain(player.y,-1,height/gridSize-3);
 
-  characterY = characterY + jump;
-
-  if (characterY >= ground) {
+  if (player.y >= ground) {
     jumpReady = true;
     jump = 0;
-    characterY = ground;
+    player.y = ground;
   } else {
     jumpReady = false;
     jump = jump + 0.12;
   }
   if (jumpReady === true) {
     if (keyIsDown(32)) {
-      jump = -1;
+      jump = -0.9;
     }
-  } else if (keyIsDown(32) && keyIsDown(39)) {
-    jump = -0.5;
-    speed = 0.5;
-  } else if (keyIsDown(32) && keyIsDown(37)) {
-    jump = -0.5;
-    speed = -0.5;
   }
-}
-
-function drawCharacter() {
-  push();
-  fill(255, 0, 0);
-  noStroke();
-  rect(
-    characterX * gridSize + gridSize,
-    characterY * gridSize + gridSize,
-    gridSize * 2
-  );
-  pop();
 }
 
 function draw() {
   background(0, 0, 0);
 
   gameScreen();
+  // startScreen();
 }
