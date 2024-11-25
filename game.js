@@ -22,6 +22,70 @@ function drawGrid() {
   }
   pop();
 }
+
+class Window {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+
+  draw() {
+    fill(174, 220, 255, 190);
+    rect(
+      this.x * gridSize,
+      this.y * gridSize,
+      this.width * gridSize,
+      this.height * gridSize
+    );
+  }
+}
+let lagerhausWindow = new Window(1, 18, 4, 5);
+let lykoWindow = new Window(9, 21, 3, 2);
+let hmWindow = new Window(16, 21, 3, 2);
+let ahlensWindow = new Window(24, 18, 5, 5);
+let zaraWindow = new Window(1, 10, 4, 5);
+let cerveraWindow = new Window(9, 14, 3, 4);
+let apotekWindow = new Window(17.75, 14, 1.5, 4);
+let hemtexWindow = new Window(24, 10, 5, 5);
+let kicksWindow = new Window(10, 7, 8, 16);
+
+class Door {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    fill(5, 14, 63, 110);
+    rect(
+      this.x * gridSize,
+      this.y * gridSize,
+      this.width * gridSize,
+      this.height * gridSize
+    );
+  }
+}
+let lagerhausDoor = new Door(1.5, 19, 1.2, 3.5);
+let lagerhaus2Door = new Door(3.2, 19, 1.2, 3.5);
+let lykoDoor = new Door(9.4, 21.5, 0.9, 1.2);
+let lyko2Door = new Door(10.7, 21.5, 0.9, 1.2);
+let hmDoor = new Door(16.4, 21.5, 0.9, 1.2);
+let hm2Door = new Door(17.7, 21.5, 0.9, 1.2);
+let ahlensDoor = new Door(24.5, 19, 1.8, 3.5);
+let ahlens2Door = new Door(26.7, 19, 1.8, 3.5);
+let zaraDoor = new Door(1.5, 11, 1.2, 3.5);
+let zara2Door = new Door(3.2, 11, 1.2, 3.5);
+let cerveraDoor = new Door(9.4, 15, 0.9, 2.5);
+let cervera2Door = new Door(10.7, 15, 0.9, 2.5);
+let apotekDoor = new Door(18.13, 15.2, 0.75, 2.5);
+let hemtexDoor = new Door(24.5, 11, 1.8, 3.5);
+let hemtex2Door = new Door(26.7, 11, 1.8, 3.5);
+let kicksDoor = new Door(10.8, 9, 2.8, 13);
+let kicks2Door = new Door(14.2, 9, 2.8, 13);
+
 class Character {
   constructor(x, y, width, height) {
     this.x = x;
@@ -195,6 +259,9 @@ function gameScreen() {
   drawGrid();
   //topshop
   kicksShop.draw();
+  kicksWindow.draw();
+  kicksDoor.draw();
+  kicks2Door.draw();
 
   //middle shops
   zaraShop.draw();
@@ -218,6 +285,33 @@ function gameScreen() {
   lykoShop.draw();
   hmShop.draw();
   ahlensShop.draw();
+
+  // windows all shops
+  lagerhausWindow.draw();
+  lykoWindow.draw();
+  hmWindow.draw();
+  ahlensWindow.draw();
+  zaraWindow.draw();
+  cerveraWindow.draw();
+  apotekWindow.draw();
+  hemtexWindow.draw();
+
+  //doors all shops
+  lagerhausDoor.draw();
+  lagerhaus2Door.draw();
+  lykoDoor.draw();
+  lyko2Door.draw();
+  hmDoor.draw();
+  hm2Door.draw();
+  ahlensDoor.draw();
+  ahlens2Door.draw();
+  zaraDoor.draw();
+  zara2Door.draw();
+  cerveraDoor.draw();
+  cervera2Door.draw();
+  apotekDoor.draw();
+  hemtexDoor.draw();
+  hemtex2Door.draw();
 
   //player
   player.draw();
