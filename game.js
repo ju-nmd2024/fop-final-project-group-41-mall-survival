@@ -1,6 +1,7 @@
 function setup() {
   createCanvas(900, 700);
 }
+
 const gridLength = 60;
 const gridSize = 30;
 let speed = 0;
@@ -62,6 +63,12 @@ class Roof {
       x <= this.x + this.width &&
       y >= this.y &&
       y <= this.y + this.height
+    );
+  }
+
+  hitTestHead(x, y) {
+    return (
+      x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y
     );
   }
 }
@@ -234,7 +241,12 @@ function gameScreen() {
     if (roof.hitTest(player.x, player.y)) {
       player.y = roof.y;
     }
+    // if (roof.hitTestHead(player.x, (player.y- player.height))){
+    //  player.y - player.height = roof.y-roof.height;
+    //  gravity = 0.5;
+    // }
   }
+
   if (keyIsDown(32)) {
     gravity = -0.8;
   } else {
