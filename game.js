@@ -235,10 +235,15 @@ function gameScreen() {
       player.y = roof.y;
     }
   }
-
-  function draw() {
-    background(0, 0, 0);
-    gameScreen();
-    // startScreen();
+  if (keyIsDown(32)) {
+    gravity = -0.8;
+  } else {
+    gravity = 0.5;
   }
+}
+
+function draw() {
+  background(0, 0, 0);
+  gameScreen();
+  // startScreen();
 }
