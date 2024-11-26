@@ -9,7 +9,12 @@ let logohemtex;
 let logokicks;
 let gametitle;
 let startbutton;
-let rulesbutton;
+let rules;
+let gameover;
+let youwin;
+let playagain;
+let menu;
+let backtostart;
 
 function preload() {
   logolagerhaus = loadImage("logo-lagerhous.png");
@@ -23,7 +28,12 @@ function preload() {
   logokicks = loadImage("kicks.png");
   gametitle = loadImage("mallsurvival.png");
   startbutton = loadImage("start.png");
-  rulesbutton = loadImage("rules.png");
+  rules = loadImage("rules.png");
+  gameover = loadImage("gameovernew.png");
+  youwin = loadImage("winnew.png");
+  playagain = loadImage("playagain.png");
+  menu = loadImage("menu.png");
+  backtostart = loadImage("backtostart.png");
 }
 
 function setup() {
@@ -36,10 +46,12 @@ let speed = 0;
 let jump = 0;
 let ground = 0;
 let gravity = 1;
+let s = 2;
+let state = "Start";
 
 function drawGrid() {
   push();
-  stroke(0, 0, 0);
+  stroke(166, 211, 216);
   noFill();
   for (let x = 0; x < gridLength; x++) {
     for (let y = 0; y < gridLength; y++) {
@@ -153,6 +165,14 @@ class Roof {
       x <= this.x + this.width &&
       y >= this.y &&
       y <= this.y + this.height
+    );
+  }
+  hitTestHead(x, y) {
+    return (
+      x >= this.x &&
+      x <= this.x + this.width &&
+      y >= this.y &&
+      y <= this.y - this.height
     );
   }
 }
@@ -278,12 +298,61 @@ function startScreen() {
   rect(330, 300, 250, 70, 20);
   rect(330, 390, 250, 70, 20);
   image(startbutton, 355, 315, 200, 60);
-  image(rulesbutton, 355, 405, 200, 60);
+  image(rules, 355, 405, 200, 60);
 }
-let maxJumpHeight = gridSize * 2;
+
+function rulesScreen() {
+  background(246, 249, 217);
+  noStroke();
+  //blue rectangle
+  fill(166, 211, 216);
+  rect(150, 300, 600, 400);
+  //pink parts
+  fill(1242, 106, 94);
+  rect(315, 280, 280, 420);
+  rect(190, 280, 50, 420);
+  rect(660, 280, 50, 420);
+  //blue part in the middle
+  fill(1, 39, 63);
+  rect(150, 470, 600, 50);
+  //mall entrance
+  fill(166, 211, 216);
+  rect(345, 560, 220, 150);
+  //details entrance
+  fill(1, 39, 63);
+  rect(345, 560, 220, 15);
+  rect(450, 560, 5, 150);
+  rect(395, 560, 1, 150);
+  rect(510, 560, 1, 150);
+  rect(345, 630, 220, 1);
+  //ground
+  rect(0, 680, 900, 20);
+
+  //box with information
+  rect(190, 50, 520, 400, 20);
+  image(rules, 340, 80, 200, 80);
+
+  //back to start button
+  fill(246, 249, 217);
+  rect(210, 370, 250, 60, 20);
+  image(backtostart, 235, 372, 200, 80);
+}
+
+function exitSign(x, y) {
+  noStroke();
+  fill(255, 0, 0);
+  rect(x, y, 100, 70);
+  fill(245, 247, 219);
+  textSize(30);
+  text("EXIT", x + 15, y + 35);
+  rect(x + 15, y + 50, 50, 2);
+  triangle(x + 60, y + 40, x + 80, y + 50, x + 60, y + 60);
+}
+
 function gameScreen() {
   background(166, 211, 216);
   drawGrid();
+  exitSign(800, 110);
 
   //topshop
   kicksShop.draw();
@@ -349,24 +418,24 @@ function gameScreen() {
   image(logolagerhaus, 40, 460, 100, 100);
   image(logolyko, 265, 550, 100, 100);
   image(logohm, 500, 575, 50, 50);
-  image(logoahlens, 745, 485, 100, 50);
+  image(logoahlens, 745, 490, 100, 40);
   image(logozara, 40, 245, 100, 50);
-  image(logocervera, 265, 365, 100, 50);
-  image(logoapotek, 530, 365, 50, 50);
-  image(logohemtex, 735, 245, 120, 50);
-  image(logokicks, 350, 130, 140, 70);
+  image(logocervera, 265, 370, 100, 40);
+  image(logoapotek, 530, 370, 50, 40);
+  image(logohemtex, 735, 255, 120, 25);
+  image(logokicks, 360, 140, 120, 50);
   //player
   player.draw();
 
   //constains on the x-axis
-  player.x = constrain(player.x, -1, 27);
+  player.x = constrain(player.x, -1, 29);
 
   //player speed sideways
   player.x = player.x + speed;
   if (keyIsDown(39)) {
-    speed = 0.4;
+    speed = 0.2;
   } else if (keyIsDown(37)) {
-    speed = -0.4;
+    speed = -0.2;
   } else {
     speed = 0;
   }
@@ -377,17 +446,162 @@ function gameScreen() {
     if (roof.hitTest(player.x, player.y)) {
       player.y = roof.y;
     }
+    if (roof.hitTestHead(player.x * gridSize, player.y * gridSize)) {
+      player.y = roof.y / 2;
+    }
   }
 
   if (keyIsDown(32)) {
-    gravity = -0.8;
+    gravity = -0.5;
   } else {
     gravity = 0.5;
   }
 }
 
+function resultYouLoseScreen() {
+  //topshop
+  kicksShop.draw();
+  kicksWindow.draw();
+  kicksDoor.draw();
+  kicks2Door.draw();
+
+  //middle shops
+  zaraShop.draw();
+  cerveraShop.draw();
+  apotekShop.draw();
+  hemtexShop.draw();
+
+  //roofs shops
+  lagerhausRoof.draw();
+  ahlensRoof.draw();
+  lykoRoof.draw();
+  hmRoof.draw();
+  zaraRoof.draw();
+  hemtexRoof.draw();
+  cerveraRoof.draw();
+  apotekRoof.draw();
+  kicksRoof.draw();
+
+  //front shops
+  lagerhausShop.draw();
+  lykoShop.draw();
+  hmShop.draw();
+  ahlensShop.draw();
+
+  // windows all shops
+  lagerhausWindow.draw();
+  lykoWindow.draw();
+  hmWindow.draw();
+  ahlensWindow.draw();
+  zaraWindow.draw();
+  cerveraWindow.draw();
+  apotekWindow.draw();
+  hemtexWindow.draw();
+
+  //doors all shops
+  lagerhausDoor.draw();
+  lagerhaus2Door.draw();
+  lykoDoor.draw();
+  lyko2Door.draw();
+  hmDoor.draw();
+  hm2Door.draw();
+  ahlensDoor.draw();
+  ahlens2Door.draw();
+  zaraDoor.draw();
+  zara2Door.draw();
+  cerveraDoor.draw();
+  cervera2Door.draw();
+  apotekDoor.draw();
+  hemtexDoor.draw();
+  hemtex2Door.draw();
+
+  //ground
+  fill(53, 40, 30);
+  rect(0, 690, 900, 10);
+
+  // logo of the stores
+  image(logolagerhaus, 40, 460, 100, 100);
+  image(logolyko, 265, 550, 100, 100);
+  image(logohm, 500, 575, 50, 50);
+  image(logoahlens, 745, 490, 100, 40);
+  image(logozara, 40, 245, 100, 50);
+  image(logocervera, 265, 370, 100, 40);
+  image(logoapotek, 530, 370, 50, 40);
+  image(logohemtex, 735, 255, 120, 25);
+  image(logokicks, 360, 140, 120, 50);
+
+  //grey overlay
+  fill(0, 0, 0, 200);
+  rect(0, 0, 900, 700);
+
+  //gameovertext
+  image(gameover, 120, -80, 700, 600);
+
+  //buttons
+  fill(190, 30, 45);
+  rect(330, 440, 250, 80, 20);
+  rect(330, 340, 250, 80, 20);
+  image(playagain, 340, 355, 230, 100);
+  image(menu, 390, 460, 130, 100);
+}
+
+function resultYouWinScreen() {
+  background(246, 249, 217);
+  noStroke();
+
+  //blue rectangle
+  fill(166, 211, 216);
+  rect(100, 100, 700, 600);
+
+  //pink parts
+  fill(1242, 106, 94);
+  rect(315, 90, 280, 720);
+  rect(190, 90, 50, 600);
+  rect(660, 90, 50, 600);
+
+  //blue part in the middle
+  fill(1, 39, 63);
+  rect(90, 420, 720, 50);
+
+  //mall entrance
+  fill(166, 211, 216);
+  rect(345, 500, 220, 180);
+
+  //details entrance
+  fill(1, 39, 63);
+  rect(345, 500, 220, 15);
+  rect(450, 500, 5, 180);
+  rect(395, 500, 1, 180);
+  rect(510, 500, 1, 180);
+  rect(345, 600, 220, 1);
+
+  //ground
+  rect(0, 680, 900, 20);
+
+  //buttons
+  rect(330, 240, 250, 70, 20);
+  rect(330, 340, 250, 70, 20);
+  image(playagain, 355, 255, 200, 90);
+  image(menu, 400, 355, 100, 90);
+
+  //you win text
+  image(youwin, 110, 30, 700, 300);
+}
+
 function draw() {
-  background(0, 0, 0);
+  // if (state ==="Start"){
+  //   startScreen();
+  // } else if (state === "Game"){
+  //   gameScreen();
+  // } else if (state === "ResultYouLose"){
+  //   resultYouLoseScreen();
+  // } else if (state === "ResultYouWin"){
+  //   resultYouWinScreen();
+  // }
+
+  // startScreen();
+  // rulesScreen();
   gameScreen();
-  //startScreen();
+  // resultYouLoseScreen();
+  // resultYouWinScreen();
 }
