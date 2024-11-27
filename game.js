@@ -15,6 +15,7 @@ let youwin;
 let playagain;
 let menu;
 let backtostart;
+let player1;
 
 function preload() {
   logolagerhaus = loadImage("logo-lagerhous.png");
@@ -34,6 +35,7 @@ function preload() {
   playagain = loadImage("playagain.png");
   menu = loadImage("menu.png");
   backtostart = loadImage("backtostart.png");
+  player1 = loadImage("player.png");
 }
 
 function setup() {
@@ -46,7 +48,8 @@ let speed = 0;
 let ground = 0;
 let gravity = 1;
 let state = "Start";
-let canJump = true;
+let jumpReady = true;
+const s = 0.09;
 
 function drawGrid() {
   push();
@@ -129,19 +132,25 @@ class Character {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.canJump = false;
   }
   draw() {
-    fill(255, 0, 0);
-
-    rect(
+    // fill(255, 0, 0);
+    // rect(
+    //   this.x * gridSize - gridSize,
+    //   this.y * gridSize - gridSize * 2,
+    //   gridSize * 2
+    // );
+    image(
+      player1,
       this.x * gridSize - gridSize,
-      this.y * gridSize - gridSize * 2,
-      gridSize * 2
+      this.y * gridSize - gridSize * 2.5,
+      gridSize * 2,
+      gridSize * 2.5
     );
   }
 }
-let player = new Character(15, 16, 2, 2);
+
+let player = new Character(18, 11.3, 2, 5);
 
 class Roof {
   constructor(x, y, width, height) {
@@ -495,48 +504,33 @@ function gameScreen() {
   player.x = constrain(player.x, -1, 29);
 
   //player speed sideways
-  player.x = player.x + speed;
-  if (keyIsDown(39)) {
-    speed = 0.2;
-  } else if (keyIsDown(37)) {
-    speed = -0.2;
-  } else {
-    speed = 0;
-  }
 
   player.y = player.y + gravity;
+
+  let onRoof = false;
 
   for (let roof of roofs) {
     if (roof.hitTest(player.x, player.y)) {
       player.y = roof.y;
+      onRoof = true;
     }
-    if (roof.hitTestHead(player.x * gridSize, player.y * gridSize)) {
-      player.y = roof.y / 2;
+
+    if (keyIsDown(32) && onRoof) {
+      jumpReady = true;
+      gravity = -5;
+    } else if (!onRoof) {
+      jumpReady = false;
+      gravity = 0.2;
     }
   }
 
-  // if (keyIsDown(32) && player.canJump)  {
-  //   gravity = -3;
-  //  player.canJump = false;
-  //  player.y= roofs.y;
-
-  //   }
-  //   else {
-  //     player.canJump= true;
-  //     gravity = 1;
-  //   }
-  player.y = player.y + gravity;
-  if (player.y === roofs.y) {
-    canJump = true;
-    gravity = 0;
+  player.x = player.x + speed;
+  if (keyIsDown(39)) {
+    speed = 0.4;
+  } else if (keyIsDown(37)) {
+    speed = -0.4;
   } else {
-    canJump = false;
-    gravity = 1;
-  }
-  if (canJump === true) {
-    if (keyIsDown(32)) {
-      gravity = -0.1;
-    }
+    speed = 0;
   }
 }
 
