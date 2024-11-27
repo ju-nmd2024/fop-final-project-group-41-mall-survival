@@ -43,11 +43,10 @@ function setup() {
 const gridLength = 60;
 const gridSize = 30;
 let speed = 0;
-let jump = 0;
 let ground = 0;
 let gravity = 1;
-let s = 2;
 let state = "Start";
+let canJump = true;
 
 function drawGrid() {
   push();
@@ -125,11 +124,12 @@ let kicksDoor = new Door(10.8, 9, 2.8, 13);
 let kicks2Door = new Door(14.2, 9, 2.8, 13);
 
 class Character {
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height, canJump) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
+    this.canJump = false;
   }
   draw() {
     fill(255, 0, 0);
@@ -198,6 +198,59 @@ let roofs = [
   apotekRoof,
   kicksRoof,
 ];
+
+class Key {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    push();
+    noFill();
+    stroke(165, 169, 180);
+    strokeWeight(5);
+    ellipse(
+      this.x * gridSize + gridSize,
+      this.y * gridSize + gridSize,
+      this.width + gridSize / 2,
+      this.height + gridSize / 2
+    );
+    fill(165, 169, 180);
+    rect(
+      this.x * gridSize + gridSize * 1.3,
+      this.y * gridSize + gridSize * 1.01,
+      this.width + gridSize,
+      this.height + gridSize / 20
+    );
+    rect(
+      this.x * gridSize + gridSize * 1.9,
+      this.y * gridSize + gridSize / 1.4,
+      this.width + gridSize / 100,
+      this.height + gridSize / 3
+    );
+    rect(
+      this.x * gridSize + gridSize * 2.2,
+      this.y * gridSize + gridSize / 1.4,
+      this.width + gridSize / 50,
+      this.height + gridSize / 3
+    );
+    pop();
+  }
+}
+let key1 = new Key(1, 5.4, 1, 1);
+let key2 = new Key(25, 13.5, 1, 1);
+let key3 = new Key(8, 9.5, 1, 1);
+let key4 = new Key(25, 5.5, 1, 1);
+let key5 = new Key(2, 13.5, 1, 1);
+let key6 = new Key(17, 16.5, 1, 1);
+let key7 = new Key(17, 9.5, 1, 1);
+let key8 = new Key(7, 16.5, 1, 1);
+let key9 = new Key(12, 1.5, 1, 1);
+
+//keys arrays
+let keys = [key1, key2, key3, key4, key5, key6, key7, key8, key9];
 
 class Frontshop {
   constructor(x, y, width, height) {
@@ -427,6 +480,17 @@ function gameScreen() {
   //player
   player.draw();
 
+  //keys
+  key1.draw();
+  key2.draw();
+  key3.draw();
+  key4.draw();
+  key5.draw();
+  key6.draw();
+  key7.draw();
+  key8.draw();
+  key9.draw();
+
   //constains on the x-axis
   player.x = constrain(player.x, -1, 29);
 
@@ -451,10 +515,28 @@ function gameScreen() {
     }
   }
 
-  if (keyIsDown(32)) {
-    gravity = -0.5;
+  // if (keyIsDown(32) && player.canJump)  {
+  //   gravity = -3;
+  //  player.canJump = false;
+  //  player.y= roofs.y;
+
+  //   }
+  //   else {
+  //     player.canJump= true;
+  //     gravity = 1;
+  //   }
+  player.y = player.y + gravity;
+  if (player.y === roofs.y) {
+    canJump = true;
+    gravity = 0;
   } else {
-    gravity = 0.5;
+    canJump = false;
+    gravity = 1;
+  }
+  if (canJump === true) {
+    if (keyIsDown(32)) {
+      gravity = -0.1;
+    }
   }
 }
 
