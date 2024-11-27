@@ -124,7 +124,7 @@ let kicksDoor = new Door(10.8, 9, 2.8, 13);
 let kicks2Door = new Door(14.2, 9, 2.8, 13);
 
 class Character {
-  constructor(x, y, width, height, canJump) {
+  constructor(x, y, width, height) {
     this.x = x;
     this.y = y;
     this.width = width;
