@@ -16,6 +16,7 @@ let playagain;
 let menu;
 let backtostart;
 let player1;
+let angrywife;
 
 function preload() {
   logolagerhaus = loadImage("logo-lagerhous.png");
@@ -36,6 +37,7 @@ function preload() {
   menu = loadImage("menu.png");
   backtostart = loadImage("backtostart.png");
   player1 = loadImage("player.png");
+  angrywife = loadImage("angrywife.png");
 }
 
 function setup() {
@@ -51,6 +53,11 @@ let state = "Start";
 let jumpReady = true;
 const s = 0.09;
 let direction = "forward";
+let wifeX = 320;
+let wifeY = 20;
+let wifeWidth = 50;
+let wifeHeight = 70;
+let lives = 3;
 
 function drawGrid() {
   push();
@@ -135,12 +142,6 @@ class Character {
     this.height = height;
   }
   draw() {
-    // fill(255, 0, 0);
-    // rect(
-    //   this.x * gridSize - gridSize,
-    //   this.y * gridSize - gridSize * 2,
-    //   gridSize * 2
-    // );
     image(
       player1,
       this.x * gridSize - gridSize,
@@ -175,14 +176,6 @@ class Roof {
       x <= this.x + this.width &&
       y >= this.y &&
       y <= this.y + this.height
-    );
-  }
-  hitTestHead(x, y) {
-    return (
-      x >= this.x &&
-      x <= this.x + this.width &&
-      y >= this.y &&
-      y <= this.y - this.height
     );
   }
 }
@@ -277,6 +270,7 @@ class stroller {
   }
 }
 let stroller1 = new stroller(1, 5.7, 2, 1);
+let stroller2 = new stroller(24, 13.7, 2, 1);
 
 class Key {
   constructor(x, y, width, height) {
@@ -318,18 +312,47 @@ class Key {
     pop();
   }
 }
-let key1 = new Key(1, 5.4, 1, 1);
-let key2 = new Key(25, 13.5, 1, 1);
-let key3 = new Key(8, 9.5, 1, 1);
-let key4 = new Key(25, 5.5, 1, 1);
-let key5 = new Key(2, 13.5, 1, 1);
-let key6 = new Key(17, 16.5, 1, 1);
-let key7 = new Key(17, 9.5, 1, 1);
-let key8 = new Key(7, 16.5, 1, 1);
-let key9 = new Key(12, 1.5, 1, 1);
+// let key1 = new Key(1, 5.4, 1, 1);
+// let key2 = new Key(25, 13.5, 1, 1);
+// let key3 = new Key(8, 9.5, 1, 1);
+// let key4 = new Key(25, 5.5, 1, 1);
+// let key5 = new Key(2, 13.5, 1, 1);
+// let key6 = new Key(17, 16.5, 1, 1);
+// let key7 = new Key(17, 9.5, 1, 1);
+// let key8 = new Key(7, 16.5, 1, 1);
+// let key9 = new Key(12, 1.5, 1, 1);
 
-//keys arrays
-let keys = [key1, key2, key3, key4, key5, key6, key7, key8, key9];
+let keys = [
+  new Key(1, 4.4, 1, 1),
+  new Key(25, 13.5, 1, 1),
+  new Key(8, 9.5, 1, 1),
+  new Key(25, 5.5, 1, 1),
+  new Key(2, 13.5, 1, 1),
+  new Key(17, 16.5, 1, 1),
+  new Key(17, 9.5, 1, 1),
+  new Key(7, 16.5, 1, 1),
+  new Key(12, 1.5, 1, 1),
+];
+
+class Wife {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    image(
+      angrywife,
+      this.x * gridSize - gridSize,
+      this.y * gridSize - gridSize * 2.5,
+      gridSize * 2,
+      gridSize * 2.5
+    );
+  }
+}
+
+let wife = new Wife(12, 3, 2, 5);
 
 class Frontshop {
   constructor(x, y, width, height) {
@@ -546,7 +569,7 @@ function gameScreen() {
   fill(53, 40, 30);
   rect(0, 690, 900, 10);
 
-  // logo of the stores
+  //logo of the stores
   image(logolagerhaus, 40, 460, 100, 100);
   image(logolyko, 265, 550, 100, 100);
   image(logohm, 500, 575, 50, 50);
@@ -556,21 +579,90 @@ function gameScreen() {
   image(logoapotek, 530, 370, 50, 40);
   image(logohemtex, 735, 255, 120, 25);
   image(logokicks, 360, 140, 120, 50);
+
   //player
   player.draw();
 
-  //keys
-  key1.draw();
-  key2.draw();
-  key3.draw();
-  key4.draw();
-  key5.draw();
-  key6.draw();
-  key7.draw();
-  key8.draw();
-  key9.draw();
+  // //all keys
+  // key1.draw();
+  // key2.draw();
+  // key3.draw();
+  // key4.draw();
+  // key5.draw();
+  // key6.draw();
+  // key7.draw();
+  // key8.draw();
+  // key9.draw();
 
-  //stroller
+  //lives & counter
+  fill(0, 0, 0);
+  textSize(20);
+  text("LIVES:", 700, 30);
+  text(lives, 770, 30);
+
+  //lose lives stroller1
+  if (
+    player.x + player.width / 2 >= stroller1.x - stroller1.width / 2 &&
+    player.x - player.width / 2 <= stroller1.x + stroller1.width / 2 &&
+    player.y + player.height / 2 >= stroller1.y - stroller1.height / 2 &&
+    player.y - player.height / 2 <= stroller1.y + stroller1.height / 2
+  ) {
+    lives = lives - 1;
+    player.x = 16;
+    player.y = 11.3;
+  }
+
+  // lose lives stroller2
+  if (
+    player.x + player.width / 2 >= stroller2.x - stroller2.width / 2 &&
+    player.x - player.width / 2 <= stroller2.x + stroller2.width / 2 &&
+    player.y + player.height / 2 >= stroller2.y - stroller2.height / 2 &&
+    player.y - player.height / 2 <= stroller2.y + stroller2.height / 2
+  ) {
+    lives = lives - 1;
+    player.x = 16;
+    player.y = 11.3;
+  }
+
+  //lose lives wife
+  if (
+    player.x + player.width / 2 >= wife.x - wife.width / 2 &&
+    player.x - player.width / 2 <= wife.x + wife.width / 2 &&
+    player.y + player.height / 2 >= wife.y - wife.height / 2 &&
+    player.y - player.height / 2 <= wife.y + wife.height / 2
+  ) {
+    lives = lives - 1;
+    player.x = 16;
+    player.y = 11.3;
+  }
+
+  //for (let key of keys) {
+  // let key = keys[0];
+  // key.draw();
+  // //}
+  // //keys.splice(1);
+  // if (player.x === key.x && player.y === key.y) {
+  //   keys.shift();
+  // }
+
+  //angry wife movement
+  wife.draw();
+  if (direction === "forward") {
+    if (wife.x < 15) {
+      wife.x = wife.x + 0.1;
+    } else {
+      direction = "backwards";
+    }
+  } else if (direction === "backwards") {
+    if (wife.x > 12) {
+      wife.x = wife.x - 0.1;
+    } else {
+      direction = "forward";
+    }
+  }
+
+  //stroller1 movement
+
   stroller1.draw();
   if (direction === "forward") {
     if (stroller1.x < 5) {
@@ -586,11 +678,26 @@ function gameScreen() {
     }
   }
 
+  //stroller2 movemnet(ahlens)
+  stroller2.draw();
+  if (direction === "forward") {
+    if (stroller2.x < 30) {
+      stroller2.x = stroller2.x + 0.1;
+    } else {
+      direction = "backwards";
+    }
+  } else if (direction === "backwards") {
+    if (stroller2.x > 24) {
+      stroller2.x = stroller2.x - 0.1;
+    } else {
+      direction = "forward";
+    }
+  }
+
   //constains on the x-axis
   player.x = constrain(player.x, -1, 29);
 
   //player speed sideways
-
   player.y = player.y + gravity;
 
   let onRoof = false;
@@ -612,9 +719,9 @@ function gameScreen() {
 
   player.x = player.x + speed;
   if (keyIsDown(39)) {
-    speed = 0.3;
+    speed = 0.4;
   } else if (keyIsDown(37)) {
-    speed = -0.3;
+    speed = -0.4;
   } else {
     speed = 0;
   }
