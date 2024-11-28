@@ -50,6 +50,7 @@ let gravity = 1;
 let state = "Start";
 let jumpReady = true;
 const s = 0.09;
+let direction = "forward";
 
 function drawGrid() {
   push();
@@ -207,6 +208,75 @@ let roofs = [
   apotekRoof,
   kicksRoof,
 ];
+
+class stroller {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    push();
+    noFill();
+    stroke(0, 0, 0);
+    strokeWeight(5);
+    //right wheel
+    ellipse(
+      this.x * gridSize * 1.23,
+      this.y * gridSize + gridSize,
+      this.width + gridSize / 3,
+      this.height + gridSize / 3
+    );
+    //left wheel
+    ellipse(
+      this.x * gridSize * 1.03,
+      this.y * gridSize + gridSize,
+      this.width + gridSize / 3,
+      this.height + gridSize / 3
+    );
+    //body of the stroller
+    rect(
+      this.x * gridSize + gridSize * 0,
+      this.y * gridSize + gridSize * 0.23,
+      this.width + gridSize,
+      this.height + gridSize / 2
+    );
+
+    //details inside stroller
+    rect(
+      this.x * gridSize + gridSize * 0.2,
+      this.y * gridSize + gridSize / 3.4,
+      this.width / 15,
+      this.height + gridSize / 3
+    );
+    rect(
+      this.x * gridSize + gridSize * 0.4,
+      this.y * gridSize + gridSize / 3.4,
+      this.width / 15,
+      this.height + gridSize / 3
+    );
+    rect(
+      this.x * gridSize + gridSize * 0.62,
+      this.y * gridSize + gridSize / 3.4,
+      this.width / 15,
+      this.height + gridSize / 3
+    );
+    rect(
+      this.x * gridSize + gridSize * 0.83,
+      this.y * gridSize + gridSize / 3.4,
+      this.width / 15,
+      this.height + gridSize / 3
+    );
+    rect(
+      this.x * gridSize * 1,
+      this.y * gridSize * 1,
+      this.width / 15,
+      this.height + gridSize / 2
+    );
+  }
+}
+let stroller1 = new stroller(1, 5.7, 2, 1);
 
 class Key {
   constructor(x, y, width, height) {
@@ -500,6 +570,22 @@ function gameScreen() {
   key8.draw();
   key9.draw();
 
+  //stroller
+  stroller1.draw();
+  if (direction === "forward") {
+    if (stroller1.x < 5) {
+      stroller1.x = stroller1.x + 0.1;
+    } else {
+      direction = "backwards";
+    }
+  } else if (direction === "backwards") {
+    if (stroller1.x > 0) {
+      stroller1.x = stroller1.x - 0.1;
+    } else {
+      direction = "forward";
+    }
+  }
+
   //constains on the x-axis
   player.x = constrain(player.x, -1, 29);
 
@@ -526,9 +612,9 @@ function gameScreen() {
 
   player.x = player.x + speed;
   if (keyIsDown(39)) {
-    speed = 0.4;
+    speed = 0.3;
   } else if (keyIsDown(37)) {
-    speed = -0.4;
+    speed = -0.3;
   } else {
     speed = 0;
   }
