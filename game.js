@@ -338,7 +338,7 @@ let keys = [
   new Key(17, 16.5, 1, 1),
   new Key(17, 9.5, 1, 1),
   new Key(7, 16.5, 1, 1),
-  new Key(12, 1.5, 1, 1),
+  new Key(10, 1.5, 1, 1),
 ];
 
 class Wife {
@@ -650,14 +650,14 @@ function gameScreen() {
   //angry wife movement
   wife.draw();
   if (direction === "forward") {
-    if (wife.x < 30) {
-      wife.x = wife.x + 0.1;
+    if (wife.x < 35) {
+      wife.x = wife.x + 0.05;
     } else {
       direction = "backwards";
     }
   } else if (direction === "backwards") {
     if (wife.x > 10) {
-      wife.x = wife.x - 0.1;
+      wife.x = wife.x - 0.05;
     } else {
       direction = "forward";
     }
@@ -668,13 +668,13 @@ function gameScreen() {
   stroller1.draw();
   if (direction === "forward") {
     if (stroller1.x < 5) {
-      stroller1.x = stroller1.x + 0.1;
+      stroller1.x = stroller1.x + 0.05;
     } else {
       direction = "backwards";
     }
   } else if (direction === "backwards") {
     if (stroller1.x > 0) {
-      stroller1.x = stroller1.x - 0.1;
+      stroller1.x = stroller1.x - 0.05;
     } else {
       direction = "forward";
     }
@@ -684,13 +684,13 @@ function gameScreen() {
   stroller2.draw();
   if (direction === "forward") {
     if (stroller2.x < 30) {
-      stroller2.x = stroller2.x + 0.1;
+      stroller2.x = stroller2.x + 0.05;
     } else {
       direction = "backwards";
     }
   } else if (direction === "backwards") {
     if (stroller2.x > 24) {
-      stroller2.x = stroller2.x - 0.1;
+      stroller2.x = stroller2.x - 0.05;
     } else {
       direction = "forward";
     }
