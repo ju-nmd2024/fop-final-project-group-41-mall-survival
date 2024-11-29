@@ -178,6 +178,14 @@ class Roof {
       y <= this.y + this.height
     );
   }
+  hitTest2(x, y) {
+    return (
+      x >= this.x &&
+      x <= this.x + this.width &&
+      y >= this.y - this.height &&
+      y <= this.y
+    );
+  }
 }
 let lagerhausRoof = new Roof(-1, 15, 7, 1);
 let ahlensRoof = new Roof(23, 15, 7, 1);
@@ -210,20 +218,19 @@ class stroller {
     this.height = height;
   }
   draw() {
-    push();
     noFill();
     stroke(0, 0, 0);
     strokeWeight(5);
     //right wheel
     ellipse(
-      this.x * gridSize * 1.23,
+      this.x * gridSize + gridSize * 1,
       this.y * gridSize + gridSize,
       this.width + gridSize / 3,
       this.height + gridSize / 3
     );
     //left wheel
     ellipse(
-      this.x * gridSize * 1.03,
+      this.x * gridSize + gridSize * 0.1,
       this.y * gridSize + gridSize,
       this.width + gridSize / 3,
       this.height + gridSize / 3
@@ -323,7 +330,7 @@ class Key {
 // let key9 = new Key(12, 1.5, 1, 1);
 
 let keys = [
-  new Key(1, 4.4, 1, 1),
+  new Key(3, 4.4, 1, 1),
   new Key(25, 13.5, 1, 1),
   new Key(8, 9.5, 1, 1),
   new Key(25, 5.5, 1, 1),
@@ -352,7 +359,7 @@ class Wife {
   }
 }
 
-let wife = new Wife(12, 3, 2, 5);
+let wife = new Wife(10, 3, 2, 5);
 
 class Frontshop {
   constructor(x, y, width, height) {
@@ -636,25 +643,20 @@ function gameScreen() {
     player.y = 11.3;
   }
 
-  //for (let key of keys) {
-  // let key = keys[0];
-  // key.draw();
-  // //}
-  // //keys.splice(1);
-  // if (player.x === key.x && player.y === key.y) {
-  //   keys.shift();
-  // }
+  for (let i = 0; i < keys.length; i++) {
+    keys.draw();
+  }
 
   //angry wife movement
   wife.draw();
   if (direction === "forward") {
-    if (wife.x < 15) {
+    if (wife.x < 30) {
       wife.x = wife.x + 0.1;
     } else {
       direction = "backwards";
     }
   } else if (direction === "backwards") {
-    if (wife.x > 12) {
+    if (wife.x > 10) {
       wife.x = wife.x - 0.1;
     } else {
       direction = "forward";
@@ -695,7 +697,7 @@ function gameScreen() {
   }
 
   //constains on the x-axis
-  player.x = constrain(player.x, -1, 29);
+  player.x = constrain(player.x, 0, 29);
 
   //player speed sideways
   player.y = player.y + gravity;
@@ -707,6 +709,9 @@ function gameScreen() {
       player.y = roof.y;
       onRoof = true;
     }
+    // if (roof.hitTest2(player.x, player.y)){
+
+    // }
 
     if (keyIsDown(32) && onRoof) {
       jumpReady = true;
