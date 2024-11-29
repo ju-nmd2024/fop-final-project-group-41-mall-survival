@@ -643,8 +643,8 @@ function gameScreen() {
     player.y = 11.3;
   }
 
-  for (let i = 0; i < keys.length; i++) {
-    keys.draw();
+  for (let key of keys) {
+    key.draw();
   }
 
   //angry wife movement
