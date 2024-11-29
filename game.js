@@ -42,6 +42,7 @@ function preload() {
 
 function setup() {
   createCanvas(900, 700);
+  frameRate(20);
 }
 
 const gridLength = 60;
@@ -58,6 +59,8 @@ let wifeY = 20;
 let wifeWidth = 50;
 let wifeHeight = 70;
 let lives = 3;
+let keyIsCollected = false;
+let keyCounter = 0;
 
 function drawGrid() {
   push();
@@ -152,7 +155,7 @@ class Character {
   }
 }
 
-let player = new Character(18, 11.3, 2, 5);
+let player = new Character(18, 11.3);
 
 class Roof {
   constructor(x, y, width, height) {
@@ -182,7 +185,7 @@ class Roof {
     return (
       x >= this.x &&
       x <= this.x + this.width &&
-      y >= this.y - this.height &&
+      y >= this.y + this.height &&
       y <= this.y
     );
   }
@@ -317,6 +320,14 @@ class Key {
       this.height + gridSize / 3
     );
     pop();
+  }
+  hitTestKey(x, y) {
+    return (
+      x >= this.x &&
+      x <= this.x + this.width &&
+      y >= this.y &&
+      y <= this.y + this.height
+    );
   }
 }
 // let key1 = new Key(1, 5.4, 1, 1);
@@ -607,6 +618,12 @@ function gameScreen() {
   text("LIVES:", 700, 30);
   text(lives, 770, 30);
 
+  //keycounter
+  fill(0, 0, 0);
+  textSize(20);
+  text("KEY COUNTER:", 20, 30);
+  text(keyCounter, 180, 30);
+
   //lose lives stroller1
   if (
     player.x + player.width / 2 >= stroller1.x - stroller1.width / 2 &&
@@ -644,7 +661,15 @@ function gameScreen() {
   }
 
   for (let key of keys) {
-    key.draw();
+    keys[0].draw();
+    if (keys[0].hitTestKey(player.x, player.y)) {
+      keys.shift();
+      keyIsCollected = true;
+      keyCounter = keyCounter + 1;
+      console.log(keyIsCollected);
+      console.log(keyCounter);
+      console.log(key.indexOf);
+    }
   }
 
   //angry wife movement
@@ -709,9 +734,6 @@ function gameScreen() {
       player.y = roof.y;
       onRoof = true;
     }
-    // if (roof.hitTest2(player.x, player.y)){
-
-    // }
 
     if (keyIsDown(32) && onRoof) {
       jumpReady = true;
