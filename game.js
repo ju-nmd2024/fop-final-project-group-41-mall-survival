@@ -17,6 +17,8 @@ let menu;
 let backtostart;
 let player1;
 let angrywife;
+let heart;
+let trampoline;
 
 function preload() {
   logolagerhaus = loadImage("logo-lagerhous.png");
@@ -38,11 +40,14 @@ function preload() {
   backtostart = loadImage("backtostart.png");
   player1 = loadImage("player.png");
   angrywife = loadImage("angrywife.png");
+  heart = loadImage("heart.png");
+  trampoline = loadImage("trampoline.png");
 }
 
 function setup() {
   createCanvas(900, 700);
-  frameRate(20);
+  frameRate(30);
+  exitSignColor = color(255, 0, 0);
 }
 
 const gridLength = 60;
@@ -61,6 +66,7 @@ let wifeHeight = 70;
 let lives = 3;
 let keyIsCollected = false;
 let keyCounter = 0;
+let exitSignColor;
 
 function drawGrid() {
   push();
@@ -155,7 +161,7 @@ class Character {
   }
 }
 
-let player = new Character(18, 11.3);
+let player = new Character(18, 11.3, 0.5, 1);
 
 class Roof {
   constructor(x, y, width, height) {
@@ -279,7 +285,7 @@ class stroller {
     );
   }
 }
-let stroller1 = new stroller(1, 5.7, 2, 1);
+let stroller1 = new stroller(1, 5.7, 2, 2);
 let stroller2 = new stroller(24, 13.7, 2, 1);
 
 class Key {
@@ -370,7 +376,47 @@ class Wife {
   }
 }
 
-let wife = new Wife(10, 3, 2, 5);
+let wife = new Wife(10, 3, 2, 2);
+
+class Heart {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    image(
+      heart,
+      this.x * gridSize - gridSize,
+      this.y * gridSize - gridSize * 2.5,
+      gridSize * 2,
+      gridSize * 2.5
+    );
+  }
+}
+
+let life = new Heart(3, 15, 1, 1);
+
+class Trampoline {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+  draw() {
+    image(
+      trampoline,
+      this.x * gridSize - gridSize,
+      this.y * gridSize - gridSize,
+      gridSize * 2,
+      gridSize
+    );
+  }
+}
+
+let jumpBoost = new Trampoline(16, 18.3, 1, 1);
 
 class Frontshop {
   constructor(x, y, width, height) {
@@ -513,7 +559,7 @@ function rulesScreen() {
 
 function exitSign(x, y) {
   noStroke();
-  fill(255, 0, 0);
+  fill(exitSignColor);
   rect(x, y, 100, 70);
   fill(245, 247, 219);
   textSize(30);
@@ -601,17 +647,6 @@ function gameScreen() {
   //player
   player.draw();
 
-  // //all keys
-  // key1.draw();
-  // key2.draw();
-  // key3.draw();
-  // key4.draw();
-  // key5.draw();
-  // key6.draw();
-  // key7.draw();
-  // key8.draw();
-  // key9.draw();
-
   //lives & counter
   fill(0, 0, 0);
   textSize(20);
@@ -623,6 +658,37 @@ function gameScreen() {
   textSize(20);
   text("KEY COUNTER:", 20, 30);
   text(keyCounter, 180, 30);
+
+  // trampoline jump
+  jumpBoost.draw();
+  if (
+    player.x + player.width / 2 >= jumpBoost.x - jumpBoost.width / 2 &&
+    player.x - player.width / 2 <= jumpBoost.x + jumpBoost.width / 2 &&
+    player.y + player.height >= jumpBoost.y - jumpBoost.height &&
+    player.y - player.height <= jumpBoost.y + jumpBoost.height
+  ) {
+    player.y = player.y - 8;
+  }
+
+  // New life
+  let lifeVisible = true;
+
+  if (lifeVisible && lives === 1) {
+    life.draw();
+  }
+  if (
+    lives === 1 &&
+    player.x + player.width / 2 >= life.x - life.width / 2 &&
+    player.x - player.width / 2 <= life.x + life.width / 2 &&
+    player.y + player.height >= life.y - life.height / 2 &&
+    player.y - player.height <= life.y + life.height / 2
+  ) {
+    lives = lives + 1;
+    player.x = 3;
+    player.y = 15;
+    lifeVisible = false;
+    delete life.x;
+  }
 
   //lose lives stroller1
   if (
@@ -640,8 +706,8 @@ function gameScreen() {
   if (
     player.x + player.width / 2 >= stroller2.x - stroller2.width / 2 &&
     player.x - player.width / 2 <= stroller2.x + stroller2.width / 2 &&
-    player.y + player.height / 2 >= stroller2.y - stroller2.height / 2 &&
-    player.y - player.height / 2 <= stroller2.y + stroller2.height / 2
+    player.y + player.height >= stroller2.y - stroller2.height / 2 &&
+    player.y - player.height <= stroller2.y + stroller2.height / 2
   ) {
     lives = lives - 1;
     player.x = 16;
@@ -727,6 +793,7 @@ function gameScreen() {
   //player speed sideways
   player.y = player.y + gravity;
 
+  // Character walking on roofs
   let onRoof = false;
 
   for (let roof of roofs) {
@@ -734,7 +801,7 @@ function gameScreen() {
       player.y = roof.y;
       onRoof = true;
     }
-
+    //character jumping from roof with space bar
     if (keyIsDown(32) && onRoof) {
       jumpReady = true;
       gravity = -5;
@@ -743,7 +810,7 @@ function gameScreen() {
       gravity = 0.2;
     }
   }
-
+  //character walking side to side
   player.x = player.x + speed;
   if (keyIsDown(39)) {
     speed = 0.4;
@@ -751,6 +818,20 @@ function gameScreen() {
     speed = -0.4;
   } else {
     speed = 0;
+  }
+
+  //Exit sign change color
+  if (keyCounter === 9) {
+    exitSignColor = color(0, 255, 0);
+  }
+
+  //winning
+  if (keyCounter === 9 && player.x >= 28) {
+    resultYouWinScreen();
+  }
+
+  if (player.y >= 24 || lives === 0) {
+    resultYouLoseScreen();
   }
 }
 
@@ -885,15 +966,15 @@ function resultYouWinScreen() {
 }
 
 function draw() {
-  // if (state ==="Start"){
-  //   startScreen();
-  // } else if (state === "Game"){
-  //   gameScreen();
-  // } else if (state === "ResultYouLose"){
-  //   resultYouLoseScreen();
-  // } else if (state === "ResultYouWin"){
-  //   resultYouWinScreen();
-  // }
+  if (state === "Start") {
+    startScreen();
+  } else if (state === "Game") {
+    gameScreen();
+  } else if (state === "ResultYouLose") {
+    resultYouLoseScreen();
+  } else if (state === "ResultYouWin") {
+    resultYouWinScreen();
+  }
 
   // startScreen();
   // rulesScreen();
