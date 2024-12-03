@@ -57,7 +57,7 @@ let ground = 0;
 let gravity = 1;
 let state = "Start";
 let jumpReady = true;
-const s = 0.09;
+//const s = 0.09;
 let direction = "forward";
 let wifeX = 320;
 let wifeY = 20;
@@ -336,15 +336,6 @@ class Key {
     );
   }
 }
-// let key1 = new Key(1, 5.4, 1, 1);
-// let key2 = new Key(25, 13.5, 1, 1);
-// let key3 = new Key(8, 9.5, 1, 1);
-// let key4 = new Key(25, 5.5, 1, 1);
-// let key5 = new Key(2, 13.5, 1, 1);
-// let key6 = new Key(17, 16.5, 1, 1);
-// let key7 = new Key(17, 9.5, 1, 1);
-// let key8 = new Key(7, 16.5, 1, 1);
-// let key9 = new Key(12, 1.5, 1, 1);
 
 let keys = [
   new Key(3, 4.4, 1, 1),
@@ -974,11 +965,79 @@ function draw() {
     resultYouLoseScreen();
   } else if (state === "ResultYouWin") {
     resultYouWinScreen();
+  } else if (state === "Rules") {
+    rulesScreen();
   }
-
-  // startScreen();
-  // rulesScreen();
-  gameScreen();
-  // resultYouLoseScreen();
-  // resultYouWinScreen();
+}
+function mouseClicked() {
+  //Click function to start the game, from start screen
+  if (
+    state === "Start" &&
+    mouseX >= 330 &&
+    mouseX <= 580 &&
+    mouseY >= 300 &&
+    mouseY <= 370
+  ) {
+    state = "Game";
+  }
+  // Go to rules screen from start screen
+  if (
+    state === "Start" &&
+    mouseX >= 330 &&
+    mouseX <= 580 &&
+    mouseY >= 390 &&
+    mouseY <= 460
+  ) {
+    state = "Rules";
+  }
+  // Back to start screen from rules
+  if (
+    state === "Rules" &&
+    mouseX >= 210 &&
+    mouseX <= 460 &&
+    mouseY >= 370 &&
+    mouseY <= 430
+  ) {
+    state = "Start";
+  }
+  //Play again from win screen
+  if (
+    state === "ResultYouWin" &&
+    mouseX >= 330 &&
+    mouseX <= 580 &&
+    mouseY >= 240 &&
+    mouseY <= 310
+  ) {
+    state = "Game";
+  }
+  //Back to start screen from win screen
+  if (
+    state === "ResultYouWin" &&
+    mouseX >= 330 &&
+    mouseX <= 580 &&
+    mouseY >= 340 &&
+    mouseY <= 410
+  ) {
+    state = "Start";
+  }
+  //Play again from lose screen
+  if (
+    state === "ResultYouLose" &&
+    mouseX >= 330 &&
+    mouseX <= 580 &&
+    mouseY >= 340 &&
+    mouseY <= 420
+  ) {
+    state = "Game";
+  }
+  //Back to start screen from lose screen
+  if (
+    state === "ResultYouLose" &&
+    mouseX >= 330 &&
+    mouseX <= 580 &&
+    mouseY >= 440 &&
+    mouseY <= 520
+  ) {
+    state = "Start";
+  }
 }
