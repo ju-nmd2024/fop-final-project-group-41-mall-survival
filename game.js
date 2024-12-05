@@ -1,3 +1,4 @@
+//ALL IMAGES
 let logolagerhaus;
 let logolyko;
 let logohm;
@@ -20,6 +21,7 @@ let angrywife;
 let heart;
 let trampoline;
 
+// LOADING ALL IMAGES
 function preload() {
   logolagerhaus = loadImage("logo-lagerhous.png");
   logolyko = loadImage("lyko-logo.png");
@@ -57,7 +59,6 @@ let ground = 0;
 let gravity = 1;
 let state = "Start";
 let jumpReady = true;
-//const s = 0.09;
 let direction = "forward";
 let wifeX = 320;
 let wifeY = 20;
@@ -68,6 +69,7 @@ let keyIsCollected = false;
 let keyCounter = 0;
 let exitSignColor;
 
+//DRAWING GRID
 function drawGrid() {
   push();
   stroke(166, 211, 216);
@@ -80,6 +82,7 @@ function drawGrid() {
   pop();
 }
 
+//WINDOW CLASS
 class Window {
   constructor(x, y, width, height) {
     this.x = x;
@@ -108,6 +111,7 @@ let apotekWindow = new Window(17.75, 14, 1.5, 4);
 let hemtexWindow = new Window(24, 10, 5, 5);
 let kicksWindow = new Window(10, 7, 8, 16);
 
+//DOOR CLASS
 class Door {
   constructor(x, y, width, height) {
     this.x = x;
@@ -143,6 +147,7 @@ let hemtex2Door = new Door(26.7, 11, 1.8, 3.5);
 let kicksDoor = new Door(10.8, 9, 2.8, 13);
 let kicks2Door = new Door(14.2, 9, 2.8, 13);
 
+//PLAYER CLASS
 class Character {
   constructor(x, y, width, height) {
     this.x = x;
@@ -159,10 +164,17 @@ class Character {
       gridSize * 2.5
     );
   }
+  reset() {
+    this.x = 16.8;
+    this.y = 10;
+    this.width = 0.5;
+    this.height = 1;
+  }
 }
 
 let player = new Character(18, 11.3, 0.5, 1);
 
+//ROOF CLASS
 class Roof {
   constructor(x, y, width, height) {
     this.x = x;
@@ -206,7 +218,7 @@ let cerveraRoof = new Roof(8, 11, 5, 1);
 let apotekRoof = new Roof(17, 11, 3, 1);
 let kicksRoof = new Roof(9, 3, 10, 1);
 
-//roofs array
+//ROOFS ARRAY
 let roofs = [
   lagerhausRoof,
   ahlensRoof,
@@ -219,6 +231,7 @@ let roofs = [
   kicksRoof,
 ];
 
+//STROLLER CLASS
 class stroller {
   constructor(x, y, width, height) {
     this.x = x;
@@ -288,6 +301,7 @@ class stroller {
 let stroller1 = new stroller(1, 5.7, 2, 2);
 let stroller2 = new stroller(24, 13.7, 2, 1);
 
+//KEY CLASS
 class Key {
   constructor(x, y, width, height) {
     this.x = x;
@@ -337,7 +351,8 @@ class Key {
   }
 }
 
-let keys = [
+//CLASS ARRAY
+const keys = [
   new Key(3, 4.4, 1, 1),
   new Key(25, 13.5, 1, 1),
   new Key(8, 9.5, 1, 1),
@@ -348,7 +363,9 @@ let keys = [
   new Key(7, 16.5, 1, 1),
   new Key(10, 1.5, 1, 1),
 ];
-
+//copy of Keys Array to be able to restart keys when restarting game.( Linus & https://www.geeksforgeeks.org/how-to-clone-an-array-in-javascript/, Retrieved 5/12-2024)
+let keysGame = [...keys];
+//WIFE CLASS
 class Wife {
   constructor(x, y, width, height) {
     this.x = x;
@@ -369,6 +386,7 @@ class Wife {
 
 let wife = new Wife(10, 3, 2, 2);
 
+//LIFE CLASS
 class Heart {
   constructor(x, y, width, height) {
     this.x = x;
@@ -389,6 +407,7 @@ class Heart {
 
 let life = new Heart(3, 15, 1, 1);
 
+//TRAMPOLINE CLASS
 class Trampoline {
   constructor(x, y, width, height) {
     this.x = x;
@@ -409,6 +428,7 @@ class Trampoline {
 
 let jumpBoost = new Trampoline(16, 18.3, 1, 1);
 
+//PINK SHOPS CLASS
 class Frontshop {
   constructor(x, y, width, height) {
     this.x = x;
@@ -432,6 +452,7 @@ let lykoShop = new Frontshop(7, 18, 5, 4);
 let hmShop = new Frontshop(14, 18, 5, 4);
 let ahlensShop = new Frontshop(22, 15, 8, 7);
 
+//GREEN SHOPS CLASS
 class Middleshop {
   constructor(x, y, width, height) {
     this.x = x;
@@ -455,6 +476,7 @@ let cerveraShop = new Middleshop(7, 11, 5, 10);
 let apotekShop = new Middleshop(16, 11, 3, 10);
 let hemtexShop = new Middleshop(22, 7, 7, 15);
 
+//YELLOW SHOP CLASS
 class Topshop {
   constructor(x, y, width, height) {
     this.x = x;
@@ -474,23 +496,28 @@ class Topshop {
 }
 let kicksShop = new Topshop(8, 3, 10, 19);
 
+//STARTSCREEN
 function startScreen() {
   background(246, 249, 217);
   noStroke();
   //blue rectangle
   fill(166, 211, 216);
   rect(150, 300, 600, 400);
+
   //pink parts
   fill(1242, 106, 94);
   rect(315, 280, 280, 420);
   rect(190, 280, 50, 420);
   rect(660, 280, 50, 420);
+
   //blue part in the middle
   fill(1, 39, 63);
   rect(150, 470, 600, 50);
+
   //mall entrance
   fill(166, 211, 216);
   rect(345, 560, 220, 150);
+
   //details entrance
   fill(1, 39, 63);
   rect(345, 560, 220, 15);
@@ -498,6 +525,7 @@ function startScreen() {
   rect(395, 560, 1, 150);
   rect(510, 560, 1, 150);
   rect(345, 630, 220, 1);
+
   //ground
   rect(0, 680, 900, 20);
 
@@ -511,23 +539,28 @@ function startScreen() {
   image(rules, 355, 405, 200, 60);
 }
 
+//RULES SCREEN
 function rulesScreen() {
   background(246, 249, 217);
   noStroke();
   //blue rectangle
   fill(166, 211, 216);
   rect(150, 300, 600, 400);
+
   //pink parts
   fill(1242, 106, 94);
   rect(315, 280, 280, 420);
   rect(190, 280, 50, 420);
   rect(660, 280, 50, 420);
+
   //blue part in the middle
   fill(1, 39, 63);
   rect(150, 470, 600, 50);
+
   //mall entrance
   fill(166, 211, 216);
   rect(345, 560, 220, 150);
+
   //details entrance
   fill(1, 39, 63);
   rect(345, 560, 220, 15);
@@ -535,12 +568,22 @@ function rulesScreen() {
   rect(395, 560, 1, 150);
   rect(510, 560, 1, 150);
   rect(345, 630, 220, 1);
+
   //ground
   rect(0, 680, 900, 20);
 
   //box with information
   rect(190, 50, 520, 400, 20);
   image(rules, 340, 80, 200, 80);
+  fill(246, 249, 216);
+  textSize(20);
+  text(
+    "To survive and get out from the mall, your mission is to collect all nine keys by jumping on the circle of the key. When all keys are collected, go to exit. You have to avoid falling down or getting hit by the strollers. Also, stay away from your wife. Use the spacebar to jump and the left and right arrow key to walk around.",
+    260,
+    150,
+    400,
+    250
+  );
 
   //back to start button
   fill(246, 249, 217);
@@ -548,6 +591,7 @@ function rulesScreen() {
   image(backtostart, 235, 372, 200, 80);
 }
 
+//EXIT SIGN
 function exitSign(x, y) {
   noStroke();
   fill(exitSignColor);
@@ -559,6 +603,7 @@ function exitSign(x, y) {
   triangle(x + 60, y + 40, x + 80, y + 50, x + 60, y + 60);
 }
 
+//GAME SCREEN
 function gameScreen() {
   background(166, 211, 216);
   drawGrid();
@@ -650,8 +695,9 @@ function gameScreen() {
   text("KEY COUNTER:", 20, 30);
   text(keyCounter, 180, 30);
 
-  // trampoline jump
+  // trampoline jump boost
   jumpBoost.draw();
+  //if statement collision from https://www.youtube.com/watch?v=JxC1zqf1S0s&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=13, retrieved 29/11-2024.
   if (
     player.x + player.width / 2 >= jumpBoost.x - jumpBoost.width / 2 &&
     player.x - player.width / 2 <= jumpBoost.x + jumpBoost.width / 2 &&
@@ -661,12 +707,14 @@ function gameScreen() {
     player.y = player.y - 8;
   }
 
-  // New life
+  // new life
   let lifeVisible = true;
 
+  //taking & deleting extra life
   if (lifeVisible && lives === 1) {
     life.draw();
   }
+  //if statement collision from https://www.youtube.com/watch?v=JxC1zqf1S0s&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=13, retrieved 29/11-2024.
   if (
     lives === 1 &&
     player.x + player.width / 2 >= life.x - life.width / 2 &&
@@ -678,10 +726,11 @@ function gameScreen() {
     player.x = 3;
     player.y = 15;
     lifeVisible = false;
-    delete life.x;
+    delete life.x; //removing forever after its been taken the first time https://stackoverflow.com/questions/208105/how-do-i-remove-a-property-from-a-javascript-object, retrieved 1/12-2024.
   }
 
   //lose lives stroller1
+  //if statement collision from https://www.youtube.com/watch?v=JxC1zqf1S0s&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=13, retrieved 29/11-2024.
   if (
     player.x + player.width / 2 >= stroller1.x - stroller1.width / 2 &&
     player.x - player.width / 2 <= stroller1.x + stroller1.width / 2 &&
@@ -694,6 +743,7 @@ function gameScreen() {
   }
 
   // lose lives stroller2
+  //if statement collision from https://www.youtube.com/watch?v=JxC1zqf1S0s&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=13, retrieved 29/11-2024.
   if (
     player.x + player.width / 2 >= stroller2.x - stroller2.width / 2 &&
     player.x - player.width / 2 <= stroller2.x + stroller2.width / 2 &&
@@ -706,6 +756,7 @@ function gameScreen() {
   }
 
   //lose lives wife
+  //if statement collision from https://www.youtube.com/watch?v=JxC1zqf1S0s&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=13, retrieved 29/11-2024.
   if (
     player.x + player.width / 2 >= wife.x - wife.width / 2 &&
     player.x - player.width / 2 <= wife.x + wife.width / 2 &&
@@ -717,15 +768,13 @@ function gameScreen() {
     player.y = 11.3;
   }
 
-  for (let key of keys) {
-    keys[0].draw();
-    if (keys[0].hitTestKey(player.x, player.y)) {
-      keys.shift();
+  //key loop & key count
+  for (let key of keysGame) {
+    keysGame[0].draw();
+    if (keysGame[0].hitTestKey(player.x, player.y)) {
+      keysGame.shift();
       keyIsCollected = true;
       keyCounter = keyCounter + 1;
-      console.log(keyIsCollected);
-      console.log(keyCounter);
-      console.log(key.indexOf);
     }
   }
 
@@ -746,7 +795,6 @@ function gameScreen() {
   }
 
   //stroller1 movement
-
   stroller1.draw();
   if (direction === "forward") {
     if (stroller1.x < 5) {
@@ -781,17 +829,19 @@ function gameScreen() {
   //constains on the x-axis
   player.x = constrain(player.x, 0, 29);
 
-  //player speed sideways
+  //player speed downwards
   player.y = player.y + gravity;
 
   // Character walking on roofs
   let onRoof = false;
 
+  //character finding roof to stand on
   for (let roof of roofs) {
     if (roof.hitTest(player.x, player.y)) {
       player.y = roof.y;
       onRoof = true;
     }
+
     //character jumping from roof with space bar
     if (keyIsDown(32) && onRoof) {
       jumpReady = true;
@@ -811,22 +861,25 @@ function gameScreen() {
     speed = 0;
   }
 
-  //Exit sign change color
+  //exit sign change color if all keys are collected
   if (keyCounter === 9) {
     exitSignColor = color(0, 255, 0);
   }
 
   //winning
   if (keyCounter === 9 && player.x >= 28) {
-    resultYouWinScreen();
+    state = "ResultYouWin";
   }
 
+  //losing
   if (player.y >= 24 || lives === 0) {
-    resultYouLoseScreen();
+    state = "ResultYouLose";
   }
 }
 
+//LOSE SCREEN
 function resultYouLoseScreen() {
+  noStroke();
   //topshop
   kicksShop.draw();
   kicksWindow.draw();
@@ -913,6 +966,7 @@ function resultYouLoseScreen() {
   image(menu, 390, 460, 130, 100);
 }
 
+//WIN SCREEN
 function resultYouWinScreen() {
   background(246, 249, 217);
   noStroke();
@@ -956,6 +1010,15 @@ function resultYouWinScreen() {
   image(youwin, 110, 30, 700, 300);
 }
 
+function reset() {
+  player.reset();
+  keyCounter = 0;
+  lives = 3;
+  keysGame = [...keys];
+  exitSignColor = color(255, 0, 0);
+}
+
+//DRAW
 function draw() {
   if (state === "Start") {
     startScreen();
@@ -969,6 +1032,7 @@ function draw() {
     rulesScreen();
   }
 }
+
 function mouseClicked() {
   //Click function to start the game, from start screen
   if (
@@ -979,6 +1043,7 @@ function mouseClicked() {
     mouseY <= 370
   ) {
     state = "Game";
+    reset();
   }
   // Go to rules screen from start screen
   if (
@@ -1009,6 +1074,7 @@ function mouseClicked() {
     mouseY <= 310
   ) {
     state = "Game";
+    reset();
   }
   //Back to start screen from win screen
   if (
@@ -1029,6 +1095,7 @@ function mouseClicked() {
     mouseY <= 420
   ) {
     state = "Game";
+    reset();
   }
   //Back to start screen from lose screen
   if (
